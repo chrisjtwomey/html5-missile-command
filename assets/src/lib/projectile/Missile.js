@@ -1,7 +1,7 @@
-import {Entity} from './Entity.js'
+import {CollidableEntity} from '../entity/CollidableEntity.js'
 import {Vector2D} from '../util/Vector2D.js'
 
-export class Missile extends Entity {
+export class Missile extends CollidableEntity {
 
   constructor(posX, posY, targetX, targetY, scoreValue) {
     super(posX, posY, 5, 5, scoreValue);
@@ -10,7 +10,7 @@ export class Missile extends Entity {
     this._target = new Vector2D(targetX, targetY);
     let dir = this._origin.angleTo(this._target);
     this._dir = new Vector2D(Math.cos(dir), Math.sin(dir));
-    this._speed = 250;
+    this._speed = 450;
   }
 
   get target() {
@@ -25,13 +25,13 @@ export class Missile extends Entity {
     super.update(dt);
 
     if(this.pos.y <= this.target.y) {
-      this.destroy();
+      this.remove();
     }
   }
 
   render(ctx) {
     ctx.save();
-    
+
     ctx.strokeStyle = "#FFF"
     ctx.beginPath();
     ctx.moveTo(this.pos.x, this.pos.y);

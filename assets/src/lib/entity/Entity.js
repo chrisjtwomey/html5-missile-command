@@ -11,18 +11,11 @@ export class Entity {
     this._pos = new Vector2D(posX, posY);
     this._velocity = new Vector2D(0, 0);
     this._acceleration = new Vector2D(0, 0);
-
+    
     if (width !== "undefined" && height !== "undefined") {
         this._width = width;
         this._height = height;
     }
-
-    this._bounds = {
-        x: 0,
-        y: 0,
-        width: canvas.width,
-        height: canvas.height
-    };
 
     entityManager.add(this)
   }
@@ -35,16 +28,27 @@ export class Entity {
       this._score += score;
   }
 
-  destroy() {
+  remove() {
     entityManager.remove(this)
   }
 
   update(dt) {
-    this._updatePosition(dt);
+    this.velocity.add(this.acceleration);
+
+    this.pos = this.pos.add(this.velocity.scale(dt));
+    this.acceleration.setComponents(0, 0);
   }
 
   get pos() {
     return this._pos;
+  }
+
+  get width() {
+    return this.width;
+  }
+
+  get height() {
+    return this.height;
   }
 
   get velocity() {
@@ -60,10 +64,6 @@ export class Entity {
         width: this._width * scaleW,
         height: this._height * scaleH
     };
-  }
-
-  get bounds() {
-    return this._bounds;
   }
 
   get score() {
@@ -90,63 +90,11 @@ export class Entity {
     this._height = height;
   }
 
-  set bounds(bounds) {
-    this._bounds = bounds;
-  }
-
   set score(score) {
     this._score = score;
   }
 
   set scoreValue(scoreValue) {
     this._scoreValue = scoreValue;
-  }
-
-  _compute_dVelocity(acceleration, dt) {
-      return acceleration.scale(dt);
-  }
-
-  _updatePosition(dt) {
-      // var newPos = this._checkOutOfBounds();
-      //
-      // this._handleOutOfBounds(newPos);
-      //
-      // var velocity = this.getVelocity().add(this.getAcceleration());
-
-      this.pos = this.pos.add(this.velocity.scale(dt));
-
-      this.acceleration.setComponents(0, 0);
-  }
-
-  _checkOutOfBounds() {
-      var width = (this.getDimensions().width !== "undefined") ? this.getDimensions().width : 0,
-          height = (this.getDimensions().height !== "undefined") ? this.getDimensions().height : 0;
-
-      var newPos = this.getPos().clone(),
-          bounds = this.getBounds();
-
-      if (newPos.x < bounds.x - width) {
-          newPos.x = (bounds.x + bounds.width) + width;
-      }
-
-      if (newPos.x > (bounds.x + bounds.width) + width) {
-          newPos.x = bounds.x - width;
-      }
-
-      if (newPos.y < bounds.y - height) {
-          newPos.y = (bounds.y + bounds.height) + height;
-      }
-
-      if (newPos.y > (bounds.y + bounds.height) + height) {
-          newPos.y = bounds.y - height;
-      }
-
-      return newPos;
-  }
-
-  _handleOutOfBounds(correctedPos) {
-      if (correctedPos.x != this.getPos().x || correctedPos.y != this.getPos().y) {
-          this.setPos(correctedPos);
-      }
   }
 }
