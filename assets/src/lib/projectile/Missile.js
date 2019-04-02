@@ -3,14 +3,15 @@ import {Vector2D} from '../util/Vector2D.js'
 
 export class Missile extends CollidableEntity {
 
-  constructor(posX, posY, targetX, targetY, scoreValue) {
-    super(posX, posY, 5, 5, scoreValue);
+  constructor(posX, posY, targetX, targetY, speed, scoreValue = 0) {
+    super(posX, posY, 2, 2, scoreValue);
 
     this._origin = new Vector2D(this.pos.x, this.pos.y);
     this._target = new Vector2D(targetX, targetY);
-    let dir = this._origin.angleTo(this._target);
+    let dir = this.origin.angleTo(this.target);
     this._dir = new Vector2D(Math.cos(dir), Math.sin(dir));
-    this._speed = 450;
+
+    this.speed = speed;
   }
 
   get target() {
@@ -21,38 +22,33 @@ export class Missile extends CollidableEntity {
     return this._origin;
   }
 
+  get dir() {
+    return this._dir;
+  }
+
+  get speed() {
+    return this._speed;
+  }
+
+  set speed(speed) {
+    this._speed = speed;
+  }
+
   update(dt) {
     super.update(dt);
-
-    if(this.pos.y <= this.target.y) {
-      this.remove();
-    }
   }
 
   render(ctx) {
     ctx.save();
 
-    ctx.strokeStyle = "#FFF"
-    ctx.beginPath();
-    ctx.moveTo(this.pos.x, this.pos.y);
-    ctx.lineTo(this.origin.x, this.origin.y);
-    ctx.stroke();
-
-    // draw target "X"
-    ctx.strokeStyle = "#FFF"
-    ctx.beginPath();
-    ctx.moveTo(this.target.x - 5, this.target.y - 5);
-    ctx.lineTo(this.target.x + 5, this.target.y + 5);
-
-    ctx.moveTo(this.target.x + 5, this.target.y - 5);
-    ctx.lineTo(this.target.x - 5, this.target.y + 5);
-    ctx.stroke();
+    ctx.fillStyle = "#FFF"
+    ctx.fillRect(this.pos.x - this.width / 2, this.pos.y - this.height / 2,  this.width,  this.height);
 
     ctx.restore();
   }
 
   launch() {
-    let velocity = this._dir.scale(this._speed);
-    this._velocity.setComponents(velocity.x, velocity.y);
+    let velocity = this.dir.scale(this.speed);
+    this.velocity.setComponents(velocity.x, velocity.y);
   }
 }

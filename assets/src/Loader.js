@@ -22,11 +22,9 @@ define("Loader", ['soundManager',
 
     canvas.width = config.viewport.width;
     canvas.height = config.viewport.height;
-    var ctx = canvas.getContext("2d");
-
-    window.scaleW = canvas.width / defaultW;
-    window.scaleH = canvas.height / defaultH;
     window.canvas = canvas;
+
+    var ctx = canvas.getContext("2d");
 
     ctx.font = "64px AtariChunky";
     ctx.fillStyle = "#000";
@@ -42,29 +40,23 @@ define("Loader", ['soundManager',
         baseImgUrl = "assets/img/",
         baseSndUrl = "assets/snd/";
 
-    var imgs = [];
+    // var imgs = [];
+    //
+    // imgs["saucer"] = loader.addImage(baseImgUrl + "saucer.png");
+    // imgs["ship"] = loader.addImage(baseImgUrl + "ship.png");
+    // imgs["ship_motion"] = loader.addImage(baseImgUrl + "ship_motion.png");
+    //
+    // window.imgs = imgs;
 
-    for (var i = 1; i < 6; i++) {
-        var url = baseImgUrl + "asteroid" + i + ".svg";
-        imgs["asteroid_" + i] = loader.addImage(url, "asteroid_" + i);
-    }
-
-    imgs["saucer"] = loader.addImage(baseImgUrl + "saucer.png");
-
-    imgs["ship"] = loader.addImage(baseImgUrl + "ship.png");
-    imgs["ship_motion"] = loader.addImage(baseImgUrl + "ship_motion.png");
-
-    window.imgs = imgs;
-
-    loader.addSound("shoot", baseSndUrl + "asteroids_shoot.wav");
-    loader.addSound("boom_low", baseSndUrl + "asteroids_die_low.mp3");
-    loader.addSound("boom_med", baseSndUrl + "asteroids_die_med.mp3");
-    loader.addSound("boom_high", baseSndUrl + "asteroids_die_high.mp3");
-    loader.addSound("saucer", baseSndUrl + "asteroids_saucer.mp3");
-    loader.addSound("saucer_high", baseSndUrl + "asteroids_saucer_high.mp3");
-    loader.addSound("tone_high", baseSndUrl + "asteroids_tone_high.mp3");
-    loader.addSound("tone_low", baseSndUrl + "asteroids_tone_low.mp3");
-    loader.addSound("bonus", baseSndUrl + "asteroids_bonus_alt.mp3");
+    // loader.addSound("shoot", baseSndUrl + "asteroids_shoot.wav");
+    // loader.addSound("boom_low", baseSndUrl + "asteroids_die_low.mp3");
+    // loader.addSound("boom_med", baseSndUrl + "asteroids_die_med.mp3");
+    // loader.addSound("boom_high", baseSndUrl + "asteroids_die_high.mp3");
+    // loader.addSound("saucer", baseSndUrl + "asteroids_saucer.mp3");
+    // loader.addSound("saucer_high", baseSndUrl + "asteroids_saucer_high.mp3");
+    // loader.addSound("tone_high", baseSndUrl + "asteroids_tone_high.mp3");
+    // loader.addSound("tone_low", baseSndUrl + "asteroids_tone_low.mp3");
+    // loader.addSound("bonus", baseSndUrl + "asteroids_bonus_alt.mp3");
 
     // callback that runs every time an asset loads
     loader.addProgressListener(function (e) {

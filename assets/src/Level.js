@@ -1,6 +1,8 @@
+//import {window} from '../Loader.js'
 import {entityManager} from './lib/entity/EntityManager.js'
-import {Turret} from './lib/entity/Turret.js'
+import {Battery} from './lib/entity/Battery.js'
 import {Vector2D} from './lib/util/Vector2D.js'
+import {KeyboardState} from '../../vendor/js/THREEx/KeyboardState.js'
 
 export class Level {
 
@@ -13,9 +15,10 @@ export class Level {
     this._level_num = level_num;
 
     // cursor pointer
-    this._pointer = new Vector2D(0, 0);
-    this._turrets = []
+    this._pointer  = new Vector2D(0, 0);
+    this._keyboard = new KeyboardState(window);
 
+    this._batteries = []
 
     canvas.onmousemove = function(evt) {
       this.pointer.setComponents(evt.x, evt.y);
@@ -23,16 +26,36 @@ export class Level {
 
     canvas.onmousedown = function(evt) {
       let target = new Vector2D(evt.x, evt.y),
-          turret = this._determineFiringTurret(target);
+          battery = this._pointer_determineFiringBattery(target);
 
-      if(turret != null) {
-        turret.fire(target);
+      if(battery != null) {
+        battery.fire(target);
       }
     }.bind(this)
   }
 
   update(dt) {
-    entityManager.update(dt)
+    entityManager.update(dt);
+
+    // TODO: less messy
+    let targetBattery;
+
+    if(this.keyboard.pressed("1")) {
+      targetBattery = this._batteries[0];
+    } else if(this.keyboard.pressed("2")) {
+      targetBattery = this._batteries[1];
+    } else if(this.keyboard.pressed("3")) {
+      targetBattery = this._batteries[2];
+    }
+
+    if(!targetBattery) {
+      for(let battery of this._batteries) {
+        battery.fireLock = false;
+      }
+    } else if (!targetBattery.fireLock) {
+      targetBattery.fire(this.pointer);
+      targetBattery.fireLock = !targetBattery.fireLock;
+    }
   }
 
   render(ctx) {
@@ -55,40 +78,39 @@ export class Level {
     ctx.restore();
   }
 
-  _determineFiringTurret(target) {
-    let closest_turret = null;
-    let smallest_distance = null;
+  _pointer_determineFiringBattery(target) {
+    let closestBattery = null;
+    let smallestDistance = null;
 
-    for(let turret of this._turrets) {
-      if(closest_turret != null) {
-        let distance = turret.pos.distanceTo(target);
+    for(let battery of this._batteries) {
+      if(closestBattery != null) {
+        let distance = battery.pos.distanceTo(target);
 
-        if(turret.ammo > 0 && ! turret.destroyed && distance < smallest_distance) {
-          smallest_distance = distance;
-          closest_turret = turret;
+        if(battery.ammo > 0 && ! battery.destroyed && distance < smallestDistance) {
+          smallestDistance = distance;
+          closestBattery = battery;
         }
       } else {
-        if(turret.ammo > 0 && ! turret.destroyed){
-          closest_turret = turret;
-          smallest_distance = turret.pos.distanceTo(target);
+        if(battery.ammo > 0 && ! battery.destroyed){
+          closestBattery = battery;
+          smallestDistance = battery.pos.distanceTo(target);
         }
       }
     }
 
-    return closest_turret;
+    return closestBattery;
   }
 
-  _spawnTurrets() {
-    this._turrets = [
-      new Turret(canvas.width * 0.2, canvas.height - 40, 50, 20),
-      new Turret(canvas.width * 0.4, canvas.height - 40, 50, 20),
-      new Turret(canvas.width * 0.6, canvas.height - 40, 50, 20),
-      new Turret(canvas.width * 0.8, canvas.height - 40, 50, 20)
+  _spawnBatteries() {
+    this._batteries = [
+      new Battery(canvas.width * 0.2, canvas.height - 40, Battery.TYPE_ALPHA),
+      new Battery(canvas.width * 0.5, canvas.height - 40, Battery.TYPE_DELTA),
+      new Battery(canvas.width * 0.8, canvas.height - 40, Battery.TYPE_OMEGA)
     ]
   }
 
   start() {
-    this._spawnTurrets();
+    this._spawnBatteries();
 
     this._started = true;
     this._paused  = false;
@@ -111,6 +133,10 @@ export class Level {
 
   get pointer() {
     return this._pointer;
+  }
+
+  get keyboard() {
+    return this._keyboard;
   }
 
   get levelNum() {

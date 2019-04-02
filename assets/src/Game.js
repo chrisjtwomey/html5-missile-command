@@ -12,8 +12,8 @@ const GRAV_MIN_DISTANCE = 200;
 const PARTICLES   = 0.5;
 const SHADOW_BLUR = 0.5;
 
-const INIT_LEVEL_NUM       = -1;
-const LEVEL_RESET_INTERVAL = 3000;
+const INIT_LEVEL_NUM       = 1;
+const LEVEL_RESET_INTERVAL = 1000;
 
 export const MAX_FPS       = 65;
 export const DEFAULT_SPEED = 1;
@@ -39,7 +39,7 @@ export class Game {
     }.bind(this))
 
     this._nextLevelTimer = new EventTimer(LEVEL_RESET_INTERVAL, function () {
-      //this.nextLevel();
+      this.nextLevel();
     }.bind(this));
   }
 

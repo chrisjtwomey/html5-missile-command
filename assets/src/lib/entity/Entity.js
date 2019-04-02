@@ -11,7 +11,7 @@ export class Entity {
     this._pos = new Vector2D(posX, posY);
     this._velocity = new Vector2D(0, 0);
     this._acceleration = new Vector2D(0, 0);
-    
+
     if (width !== "undefined" && height !== "undefined") {
         this._width = width;
         this._height = height;
@@ -44,11 +44,11 @@ export class Entity {
   }
 
   get width() {
-    return this.width;
+    return this._width;
   }
 
   get height() {
-    return this.height;
+    return this._height;
   }
 
   get velocity() {
@@ -61,8 +61,8 @@ export class Entity {
 
   get dimensions() {
     return {
-        width: this._width * scaleW,
-        height: this._height * scaleH
+        width: this.width,
+        height: this.height
     };
   }
 
