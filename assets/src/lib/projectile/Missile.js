@@ -1,4 +1,5 @@
 import {CollidableEntity} from '../entity/CollidableEntity.js'
+import {Explosion} from '../entity/Explosion.js'
 import {Vector2D} from '../util/Vector2D.js'
 
 export class Missile extends CollidableEntity {
@@ -36,6 +37,11 @@ export class Missile extends CollidableEntity {
 
   update(dt) {
     super.update(dt);
+  }
+
+  destroy() {
+    let explosion = new Explosion(this.pos.x, this.pos.y);
+    super.destroy();
   }
 
   render(ctx) {

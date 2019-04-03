@@ -15,6 +15,10 @@ export class CollidableEntity extends Entity {
       return circlesIntersect(c1.x, c1.y, c1.r, c2.x, c2.y, c2.r);
   }
 
+  destroy() {
+    super.remove();
+  }
+
   get boundingCircle() {
     return {
       x: this.x,

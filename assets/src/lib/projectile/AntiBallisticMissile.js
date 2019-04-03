@@ -6,11 +6,15 @@ export class AntiBallisticMissile extends Missile {
     super(posX, posY, targetX, targetY, speed);
   }
 
+  destroy() {
+    super.destroy();
+  }
+
   update(dt) {
     super.update(dt);
 
     if(this.pos.y <= this.target.y) {
-      this.remove();
+      this.destroy();
     }
   }
 

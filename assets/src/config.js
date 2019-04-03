@@ -40,7 +40,7 @@ requirejs.config({
 var conf = {
     viewport: {
         width: 800,
-        height: 900
+        height: 600
     }
 };
 
